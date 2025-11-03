@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Register</title></head>
+<body>
+  <form id="form" style="width:320px;margin:80px auto;background:#f2f2f2;padding:20px;border-radius:6px;">
+    <h2 style="text-align:center">Register</h2>
+    <label>Email / Username</label>
+    <input id="mail" type="text" placeholder="Enter username or email" style="width:100%;padding:8px;margin-top:5px"/>
+    <label>Create Password</label>
+    <input id="pass" type="password" placeholder="Enter a password" style="width:100%;padding:8px;margin-top:5px"/>
+    <button type="submit" style="width:100%;padding:10px;margin-top:12px;">Proceed</button>
+    <p style="text-align:center;margin-top:8px;"><a href="login.html">Login</a></p>
+  </form>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('mail').value.trim();
+      const password = document.getElementById('pass').value.trim();
+      if (!username || !password) { alert('Enter both fields'); return; }
+
+      try {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        alert(data.message || 'Registered');
+        window.location.href = '/plans.html';
+      } catch (err) {
+        console.error(err);
+        alert('Server error');
+      }
+    });
+  </script>
+</body>
+</html>
